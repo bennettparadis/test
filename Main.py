@@ -4,6 +4,21 @@ import plotly.graph_objects as go
 
 st.set_page_config(page_title="NC Oyster Sanctuary Data", page_icon=":oyster:", layout="wide")
 
+# Define the custom CSS
+custom_css = """
+<style>
+    /* Change the color and font of the page titles in the sidebar */
+    .eczjsme10 {
+        color: #00647B !important; /* Replace with your desired color */
+        font-weight: bold !important;
+        font-size: 18px !important;
+    }
+</style>
+"""
+
+# Apply the custom CSS
+st.markdown(custom_css, unsafe_allow_html=True)
+
 # --- MAINPAGE ---
 
 st.markdown('''
@@ -36,11 +51,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
 st.sidebar.success("Choose how you want to explore the dataset!")
 
 df = pd.read_csv('data/2019-2023_oyster_densities.csv')
-
 
 year = st.sidebar.selectbox(
     "Select a Year:", 
@@ -74,11 +87,10 @@ sampling_effort = {
         'samples':'136',
         'oysters':'26,652'
     },
-
 }
 
 with col1:
-    #Donut chart
+    # Donut chart
     legal_sum = df_selection['legal'].sum()
     sublegal_sum = df_selection['sublegal'].sum()
     spat_sum = df_selection['spat'].sum()
@@ -86,12 +98,12 @@ with col1:
     labels = ['Legal (>75mm)', 'Sublegal (26mm< x <76mm)', 'Spat (<26mm)']
     values = [legal_sum, sublegal_sum, spat_sum]
     fig = go.Figure(
-        data=[go.Pie(labels=labels, values= values, hole=0.3)]
-        )
+        data=[go.Pie(labels=labels, values=values, hole=0.3)]
+    )
     fig.update_traces(
-        marker=dict(colors=['#636EFA', '#EF553B', '#00CC96'],line=dict(color= 'black', width=2)),
-            hoverlabel=dict(bgcolor='white', font=dict(color='black', size =16))
-        )
+        marker=dict(colors=['#636EFA', '#EF553B', '#00CC96'], line=dict(color='black', width=2)),
+        hoverlabel=dict(bgcolor='white', font=dict(color='black', size=16))
+    )
     fig.update_layout(
         title=f"Size Class Breakdown - Sampling {year}"
     )
@@ -112,6 +124,3 @@ with col2:
         - Compare oyster populations
         - Analyze the performance of different materials used on the sanctuaries
         """)
-
-
-
