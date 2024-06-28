@@ -1,0 +1,8 @@
+streamlit
+numpy
+pandas
+geopandas
+warnings
+plotly
+pydeck
+statsmodels
