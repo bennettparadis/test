@@ -8,7 +8,7 @@ st.set_page_config(page_title="NC Oyster Sanctuary Data", page_icon=":oyster:", 
 custom_css = """
 <style>
     /* Change the color and font of the page titles in the sidebar */
-    .eczjsme13 {
+    .eczjsme16 {
         color: #00647B !important; /* Replace with your desired color */
         font-weight: bold !important;
         font-size: 18px !important;
