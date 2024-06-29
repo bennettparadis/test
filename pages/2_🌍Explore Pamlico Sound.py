@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 import pydeck as pdk
 import geopandas as gpd
-import plotly.express as px
-import plotly.graph_objects as go
 
 # Tab display 
 st.set_page_config(page_title="NC Oyster Sanctuary Data", page_icon=":oyster:", layout="wide")
@@ -31,7 +29,6 @@ st.info("""
     
     *NOTE: Red columns indicate two or more samples were collected in close proximity to one another.
 """)
-
 
 # Load data
 df = pd.read_csv('data/2019-2023_oyster_densities.csv')
@@ -65,7 +62,6 @@ boundary_centroid_data = OSBoundaries[['OS_Name', 'Latitude', 'Longitude']]
 geojson_dict = OSMaterial.to_crs(epsg=4326).__geo_interface__
 
 # Define layers
-# Define the TextLayer with positions of each geometry's centroid
 text_layer = pdk.Layer(
     "TextLayer",
     data=boundary_centroid_data,
@@ -76,7 +72,6 @@ text_layer = pdk.Layer(
     get_alignment_baseline="'top'",
 )
 
-# Material layer
 material_layer = pdk.Layer(
     "GeoJsonLayer",
     data=geojson_dict,  
@@ -87,13 +82,12 @@ material_layer = pdk.Layer(
 max_total = df_selection['total'].max()
 df_selection['tooltip'] = df_selection['total'].apply(lambda x: f'{x} oysters/m²')
 
-# Density visualizer
 density_layer = pdk.Layer(
     "HexagonLayer",
     data=df_selection,
     get_position=["Longitude", "Latitude"],
-    radius=8,  # Increased radius for better visualization
-    elevation_scale=1,  # Adjusted elevation scale for better visibility
+    radius=8,  
+    elevation_scale=1,  
     elevation_range=[0, 3000],
     extruded=True,
     pickable=True,
@@ -103,7 +97,6 @@ density_layer = pdk.Layer(
     get_fill_color="[255, total * 5, total * 5]",
 )
 
-# Tooltip configuration for the HexagonLayer
 tooltip = {
     "html": "<b>Oysters/m²:</b> {elevationValue}",
     "style": {
@@ -122,7 +115,12 @@ st.pydeck_chart(
             "zoom": 11.2,
             "pitch": 60,
         },
-        layers=[text_layer, density_layer, material_layer],
-        tooltip=tooltip  # Add the tooltip configuration
+        layers=[text_layer, material_layer],  # Start with only these two layers
+        tooltip=tooltip
     )
 )
+
+# Debugging: Check the data
+st.write(boundary_centroid_data.head())
+st.write(df_selection.head())
+st.write(geojson_dict)
