@@ -4,7 +4,7 @@ import streamlit as st
 custom_css = """
 <style>
     /* Change the color and font of the page titles in the sidebar */
-    .eczjsme13 {
+    .eczjsme14 {
         color: #00647B !important; /* Replace with your desired color */
         font-weight: bold !important;
         font-size: 18px !important;
