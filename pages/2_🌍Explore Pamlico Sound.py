@@ -50,9 +50,7 @@ year = st.sidebar.selectbox(
     key=30
 )
 
-df_selection = df.query(
-    "Year == @year"
-)
+df_selection = df[df['Year'] == year]
 
 # Extract centroids for each geometry in OSBoundaries
 OSBoundaries['centroid'] = OSBoundaries.geometry.centroid
