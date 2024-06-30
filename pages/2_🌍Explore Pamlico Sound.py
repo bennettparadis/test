@@ -51,6 +51,13 @@ df_selection = df.query("Year == @year")
 # Ensure no missing values in critical columns
 df_selection = df_selection.dropna(subset=['Latitude', 'Longitude', 'total'])
 
+# Debugging information
+st.write("Data types of columns in df_selection:")
+st.write(df_selection.dtypes)
+
+st.write("First few rows of df_selection:")
+st.write(df_selection.head())
+
 # Extract centroids for each geometry in OSBoundaries
 OSBoundaries['centroid'] = OSBoundaries.geometry.centroid
 OSBoundaries['Latitude'] = OSBoundaries.centroid.y
