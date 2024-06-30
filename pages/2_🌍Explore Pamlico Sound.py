@@ -51,6 +51,7 @@ year = st.sidebar.selectbox(
 )
 
 df_selection = df[df['Year'] == year]
+df_selection = df_selection[['Latitude', 'Longitude', 'total']]
 
 # Extract centroids for each geometry in OSBoundaries
 OSBoundaries['centroid'] = OSBoundaries.geometry.centroid
@@ -124,3 +125,6 @@ st.pydeck_chart(
         layers=[text_layer, material_layer]
     )
 )
+
+st.write(df_selection.head())
+print(df_selection.dtypes)
