@@ -86,7 +86,7 @@ material_layer = pdk.Layer(
 )
 
 max_total = df_selection['total'].max()
-df_selection['tooltip'] = df_selection['total'].apply(lambda x: f'{x} oysters/m²')
+# df_selection['tooltip'] = df_selection['total'].apply(lambda x: f'{x} oysters/m²')
 
 # Density visualizer
 density_layer = pdk.Layer(
@@ -104,14 +104,14 @@ density_layer = pdk.Layer(
     get_fill_color="[255, total * 5, total * 5]",
 )
 
-# Tooltip configuration for the HexagonLayer
-tooltip = {
-    "html": "<b>Oysters/m²:</b> {elevationValue}",
-    "style": {
-        "backgroundColor": "steelblue",
-        "color": "white"
-    }
-}
+# # Tooltip configuration for the HexagonLayer
+# tooltip = {
+#     "html": "<b>Oysters/m²:</b> {elevationValue}",
+#     "style": {
+#         "backgroundColor": "steelblue",
+#         "color": "white"
+#     }
+# }
 
 # Display map
 st.pydeck_chart(
@@ -123,7 +123,6 @@ st.pydeck_chart(
             "zoom": 11.2,
             "pitch": 60,
         },
-        layers=[text_layer, material_layer],
-        tooltip=tooltip  
+        layers=[text_layer, material_layer]
     )
 )
