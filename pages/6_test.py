@@ -35,7 +35,7 @@ density_layer = pdk.Layer(
 )
 
 tooltip = {
-    "html": "<b>Oysters/m²:</b> {total}",  # Ensure {total} matches your data column name
+    "html": "<b>Oysters/m²:</b> {tooltip}",  # Ensure {tooltip} matches your data column name
     "style": {
         "backgroundColor": "steelblue",
         "color": "white"
