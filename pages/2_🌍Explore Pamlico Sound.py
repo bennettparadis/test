@@ -50,6 +50,11 @@ df_selection = df.query(
     "Year == @year"
 )
 
+# Debugging: Check for missing or NaN values
+if df_selection.isnull().values.any():
+    st.error("There are missing values in the data.")
+    st.write(df_selection.isnull().sum())
+
 # Extract centroids for each geometry in OSBoundaries
 OSBoundaries['centroid'] = OSBoundaries.geometry.centroid
 OSBoundaries['Latitude'] = OSBoundaries.centroid.y
@@ -105,6 +110,14 @@ tooltip = {
     }
 }
 
+# Debugging: Output the data for inspection
+st.write("Boundary Centroid Data:")
+st.write(boundary_centroid_data.head())
+st.write("Selected Data for Density Layer:")
+st.write(df_selection.head())
+st.write("GeoJSON Data:")
+st.write(geojson_dict)
+
 # Display map
 st.pydeck_chart(
     pdk.Deck(
@@ -115,7 +128,7 @@ st.pydeck_chart(
             "zoom": 11.2,
             "pitch": 60,
         },
-        layers=[text_layer, density_layer, material_layer],  # Start with only these two layers
+        layers=[text_layer, material_layer, density_layer],  
         tooltip=tooltip
     )
 )
