@@ -20,7 +20,7 @@ df_selection = df[df["Year"] == year]
 max_total = df_selection['total'].max()
 
 # Create a formatted tooltip column
-df_selection['tooltip'] = df_selection.apply(lambda row: f"Oysters/m²: {row['total']}", axis=1)
+df_selection['tooltip'] = df_selection['total'].apply(lambda x: f"Oysters/m²: {x}")
 
 density_layer = pdk.Layer(
     "HexagonLayer",
@@ -36,8 +36,9 @@ density_layer = pdk.Layer(
     get_fill_color="[255, total * 5, total * 5]",  # Adjust color mapping
 )
 
+# Define the tooltip
 tooltip = {
-    "html": "{tooltip}",  # Use {tooltip} directly as it already contains the formatted text
+    "html": "<b>{tooltip}</b>",
     "style": {
         "backgroundColor": "steelblue",
         "color": "white"
