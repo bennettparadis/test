@@ -91,7 +91,7 @@ density_layer = pdk.Layer(
     pickable=True,
     get_elevation="total",
     auto_highlight=True,
-    get_fill_color="[255, total * 5, total * 5]",
+    get_fill_color="[255, total * 5, total * 5]"
 )
 
 tooltip = {
