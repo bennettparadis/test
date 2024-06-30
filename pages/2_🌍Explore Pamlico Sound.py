@@ -46,12 +46,9 @@ year = st.sidebar.selectbox(
     key=30
 )
 
-df_selection = df.query("Year == @year")
-
-# Debugging: Check for missing or NaN values
-if df_selection.isnull().values.any():
-    st.error("There are missing values in the selected data. These rows will be removed.")
-    df_selection = df_selection.dropna()
+df_selection = df.query(
+    "Year == @year"
+)
 
 # Extract centroids for each geometry in OSBoundaries
 OSBoundaries['centroid'] = OSBoundaries.geometry.centroid
@@ -108,14 +105,6 @@ tooltip = {
     }
 }
 
-# Debugging: Output the data for inspection
-st.write("Boundary Centroid Data:")
-st.write(boundary_centroid_data.head())
-st.write("Selected Data for Density Layer:")
-st.write(df_selection.head())
-st.write("GeoJSON Data:")
-st.write(geojson_dict)
-
 # Display map
 st.pydeck_chart(
     pdk.Deck(
@@ -126,7 +115,12 @@ st.pydeck_chart(
             "zoom": 11.2,
             "pitch": 60,
         },
-        layers=[text_layer, material_layer, density_layer],  
+        layers=[text_layer, material_layer],  # Start with only these two layers
         tooltip=tooltip
     )
 )
+
+# Debugging: Check the data
+st.write(boundary_centroid_data.head())
+st.write(df_selection.head())
+st.write(geojson_dict)
