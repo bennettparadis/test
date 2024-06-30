@@ -105,7 +105,7 @@ density_layer = pdk.Layer(
 
 # Tooltip configuration for the HexagonLayer
 tooltip = {
-    "html": "<b>Oysters/m²:</b> {elevationValue}",
+    "html": "<b>Oysters/m²:</b> {'total'}",
     "style": {
         "backgroundColor": "steelblue",
         "color": "white"
