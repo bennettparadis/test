@@ -9,8 +9,7 @@ custom_css = """
 <style>
     /* Change the color and font of the page titles in the sidebar */
     .eczjsme13 {
-        color: #00647B !important; /* Replace with your desired color */
-        font-weight: bold !important;
+        color: #00647B !important;
         font-size: 18px !important;
     }
 </style>
