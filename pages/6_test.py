@@ -54,5 +54,6 @@ st.pydeck_chart(
             "pitch": 60,
         },
         layers=[density_layer],
+        tooltip=tooltip
     )
 )
