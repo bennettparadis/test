@@ -46,14 +46,12 @@ year = st.sidebar.selectbox(
     key=30
 )
 
-df_selection = df.query(
-    "Year == @year"
-)
+df_selection = df.query("Year == @year")
 
 # Debugging: Check for missing or NaN values
 if df_selection.isnull().values.any():
-    st.error("There are missing values in the data.")
-    st.write(df_selection.isnull().sum())
+    st.error("There are missing values in the selected data. These rows will be removed.")
+    df_selection = df_selection.dropna()
 
 # Extract centroids for each geometry in OSBoundaries
 OSBoundaries['centroid'] = OSBoundaries.geometry.centroid
