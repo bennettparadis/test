@@ -4,12 +4,6 @@ import plotly.graph_objects as go
 
 st.set_page_config(page_title="NC Oyster Sanctuary Data", page_icon=":oyster:", layout="wide")
 
-import streamlit as st
-import pandas as pd
-import plotly.graph_objects as go
-
-st.set_page_config(page_title="NC Oyster Sanctuary Data", page_icon=":oyster:", layout="wide")
-
 # Define the custom CSS
 custom_css = """
 <style>
