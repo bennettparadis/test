@@ -84,28 +84,18 @@ material_layer = pdk.Layer(
 
 max_total = df_selection['total'].max()
 
-# Define a color scale function in JavaScript
-color_expression = [
-    "interpolate",
-    ["linear"],
-    ["get", "total"],
-    0, [255, 255, 0],   # Yellow
-    max_total, [255, 0, 0]  # Red
-]
-
-# Define the ColumnLayer for the density visualization
 density_layer = pdk.Layer(
     "ColumnLayer",
     data=df_selection,
     get_position=["Longitude", "Latitude"],
     get_elevation="total",
-    radius=500,
-    elevation_scale=100,
-    get_fill_color=color_expression,
+    radius=8,
+    elevation_scale=1,
+    get_fill_color=[255, 0, 0, 150],
     pickable=True,
     auto_highlight=True,
 )
-# Tooltip configuration for the ColumnLayer
+
 tooltip = {
     "html": "<b>Oysters/m²:</b> {total}",
     "style": {
