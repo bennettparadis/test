@@ -51,7 +51,7 @@ year = st.sidebar.selectbox(
 )
 
 df_selection = df[df['Year'] == year]
-df_selection = df_selection[['Latitude', 'Longitude', 'total']]
+df_selection = df_selection[['Year', 'Latitude', 'Longitude', 'total']]
 
 # Extract centroids for each geometry in OSBoundaries
 OSBoundaries['centroid'] = OSBoundaries.geometry.centroid
