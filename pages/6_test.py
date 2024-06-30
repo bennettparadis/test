@@ -18,7 +18,9 @@ year = st.sidebar.selectbox(
 df_selection = df[df["Year"] == year]
 
 max_total = df_selection['total'].max()
-df_selection['tooltip'] = df_selection['total'].apply(lambda x: f'{x} oysters/m²')
+
+# Create a formatted tooltip column
+df_selection['tooltip'] = df_selection.apply(lambda row: f"Oysters/m²: {row['total']}", axis=1)
 
 density_layer = pdk.Layer(
     "HexagonLayer",
@@ -35,7 +37,7 @@ density_layer = pdk.Layer(
 )
 
 tooltip = {
-    "html": "<b>Oysters/m²:</b> {total}",  # Ensure {total} matches your data column name
+    "html": "{tooltip}",  # Use {tooltip} directly as it already contains the formatted text
     "style": {
         "backgroundColor": "steelblue",
         "color": "white"
