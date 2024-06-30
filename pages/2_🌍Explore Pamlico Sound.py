@@ -123,7 +123,7 @@ st.pydeck_chart(
             "zoom": 11.2,
             "pitch": 60,
         },
-        layers=[text_layer, material_layer, density_layer],  
+        layers=[text_layer, density_layer],  
         tooltip=tooltip
     )
 )
