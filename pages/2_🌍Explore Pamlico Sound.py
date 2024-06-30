@@ -90,7 +90,6 @@ density_layer = pdk.Layer(
     extruded=True,
     pickable=True,
     get_elevation="total",
-    elevation_scale=50,
     elevation_range=[0, 3000],
     auto_highlight=True,
     get_fill_color="[255, total * 5, total * 5]",
