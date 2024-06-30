@@ -18,29 +18,29 @@ year = st.sidebar.selectbox(
 df_selection = df[df["Year"] == year]
 
 max_total = df_selection['total'].max()
-
-# Define the tooltip format
-tooltip = {
-    "html": "Oysters/m²: {total}",  # Format the tooltip HTML to display the 'total' value
-    "style": {
-        "backgroundColor": "steelblue",
-        "color": "white"
-    }
-}
+df_selection['tooltip'] = df_selection['total'].apply(lambda x: f'{x} oysters/m²')
 
 density_layer = pdk.Layer(
     "HexagonLayer",
     data=df_selection,
     get_position=["Longitude", "Latitude"],
-    radius=8,  
-    elevation_scale=1,  
+    radius=200,  # Adjust radius as needed
+    elevation_scale=50,  # Adjust elevation scale
     elevation_range=[0, 3000],
     extruded=True,
     pickable=True,
     get_elevation="total",
     auto_highlight=True,
-    get_fill_color="[255, total * 5, total * 5]",
+    get_fill_color="[255, total * 5, total * 5]",  # Adjust color mapping
 )
+
+tooltip = {
+    "html": "<b>Oysters/m²:</b> {total}",  # Ensure {total} matches your data column name
+    "style": {
+        "backgroundColor": "steelblue",
+        "color": "white"
+    }
+}
 
 # Display map
 st.pydeck_chart(
