@@ -31,7 +31,7 @@ st.info("""
 """)
 
 # Load data
-df = pd.read_csv('data/2019-2023_oyster_densities.csv', na_values='NA')
+df = pd.read_csv('data/2019-2023_oyster_densities.csv')
 OSMaterial = gpd.read_file("data/OS_material_storymap.shp")
 OSBoundaries = gpd.read_file("data/permit_boundaries.shp")
 
@@ -48,15 +48,10 @@ year = st.sidebar.selectbox(
 
 df_selection = df.query("Year == @year")
 
-# Ensure no missing values in critical columns
-df_selection = df_selection.dropna(subset=['Latitude', 'Longitude', 'total'])
-
-# Debugging information
-st.write("Data types of columns in df_selection:")
-st.write(df_selection.dtypes)
-
-st.write("First few rows of df_selection:")
-st.write(df_selection.head())
+# Debugging: Check for missing or NaN values
+if df_selection.isnull().values.any():
+    st.error("There are missing values in the selected data. These rows will be removed.")
+    df_selection = df_selection.dropna()
 
 # Extract centroids for each geometry in OSBoundaries
 OSBoundaries['centroid'] = OSBoundaries.geometry.centroid
@@ -112,6 +107,14 @@ tooltip = {
         "color": "white"
     }
 }
+
+# Debugging: Output the data for inspection
+st.write("Boundary Centroid Data:")
+st.write(boundary_centroid_data.head())
+st.write("Selected Data for Density Layer:")
+st.write(df_selection.head())
+st.write("GeoJSON Data:")
+st.write(geojson_dict)
 
 # Display map
 st.pydeck_chart(
