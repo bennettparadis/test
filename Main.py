@@ -1,22 +1,12 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
+from utils import inject_custom_css
 
 st.set_page_config(page_title="NC Oyster Sanctuary Data", page_icon=":oyster:", layout="wide")
 
-# Define the custom CSS
-custom_css = """
-<style>
-    /* Change the color and font of the page titles in the sidebar */
-    .eczjsme13 {
-        color: #00647B !important; /* Replace with your desired color */
-        font-weight: bold !important;
-        font-size: 16px !important;
-    }
-</style>
-"""
+inject_custom_css()
 
-# Apply the custom CSS
 st.markdown(custom_css, unsafe_allow_html=True)
 
 # --- MAINPAGE ---
