@@ -101,6 +101,7 @@ density_layer = pdk.Layer(
     elevation_domain=[0, max_total],
     auto_highlight=True,
     get_fill_color="[255, total * 5, total * 5]",
+    tooltip = tooltip
 )
 
 # Tooltip configuration for the HexagonLayer
@@ -122,7 +123,8 @@ st.pydeck_chart(
             "zoom": 11.2,
             "pitch": 60,
         },
-        layers=[text_layer, material_layer]
+        layers=[text_layer, material_layer],
+        tooltip = tooltip
     )
 )
 
