@@ -46,9 +46,7 @@ year = st.sidebar.selectbox(
     key=30
 )
 
-df_selection = df.query(
-    "Year == @year"
-)
+df_selection = df[df["Year"] == year]
 
 # Extract centroids for each geometry in OSBoundaries
 OSBoundaries['centroid'] = OSBoundaries.geometry.centroid
@@ -91,14 +89,15 @@ density_layer = pdk.Layer(
     elevation_range=[0, 3000],
     extruded=True,
     pickable=True,
-    get_elevation_weight='total',
-    elevation_domain=[0, max_total],
+    get_elevation="total",
+    elevation_scale=50,
+    elevation_range=[0, 3000],
     auto_highlight=True,
     get_fill_color="[255, total * 5, total * 5]",
 )
 
 tooltip = {
-    "html": "<b>Oysters/m²:</b> {elevationValue}",
+    "html": "<b>Oysters/m²:</b> {total}",
     "style": {
         "backgroundColor": "steelblue",
         "color": "white"
