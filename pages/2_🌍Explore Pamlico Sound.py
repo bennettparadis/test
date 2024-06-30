@@ -127,4 +127,4 @@ st.pydeck_chart(
 )
 
 st.write(df_selection.head())
-print(df_selection.dtypes)
+st.write(df_selection.dtypes)
