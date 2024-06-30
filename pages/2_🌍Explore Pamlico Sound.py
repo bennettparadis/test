@@ -4,9 +4,9 @@ import pydeck as pdk
 import geopandas as gpd
 
 # Load data
-df = pd.read_csv('/mnt/data/2019-2023_oyster_densities.csv')
-OSMaterial = gpd.read_file("/mnt/data/OS_material_storymap.shp")
-OSBoundaries = gpd.read_file("/mnt/data/permit_boundaries.shp")
+df = pd.read_csv('data/2019-2023_oyster_densities.csv')
+OSMaterial = gpd.read_file("data/OS_material_storymap.shp")
+OSBoundaries = gpd.read_file("data/permit_boundaries.shp")
 
 # Set up the Streamlit page
 st.set_page_config(page_title="NC Oyster Sanctuary Data", page_icon=":oyster:", layout="wide")
