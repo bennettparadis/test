@@ -115,12 +115,7 @@ st.pydeck_chart(
             "zoom": 11.2,
             "pitch": 60,
         },
-        layers=[text_layer, material_layer],  # Start with only these two layers
+        layers=[text_layer, density_layer, material_layer],  # Start with only these two layers
         tooltip=tooltip
     )
 )
-
-# Debugging: Check the data
-st.write(boundary_centroid_data.head())
-st.write(df_selection.head())
-st.write(geojson_dict)
