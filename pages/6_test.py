@@ -1,10 +1,41 @@
 import streamlit as st
 import pandas as pd
 import pydeck as pdk
+import geopandas as gpd
+
+# Tab display 
+st.set_page_config(page_title="NC Oyster Sanctuary Data", page_icon=":oyster:", layout="wide")
+
+st.markdown(
+    f"""
+    <div style="text-align: center;">
+        <p style="font-size:50px; font-weight: bold;">🌍Explore Pamlico Sound</p>
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    f"""
+    <div style="text-align: center;">
+        <p style="font-size:20px;">Welcome to North Carolina's Pamlico Sound -- home to 15 oyster sanctuaries spanning 563 acres of protected subtidal habitat. Every year NCDMF's Habitat & Enhancement dive team visits each sanctuary to collect oyster density estimates all around the reefs which are then used for further analysis and to quantify reef performance.</p>
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
+
+st.info("""
+    **Explore the map to see how oyster densities differ across Pamlico Sound. Zoom in and you will see where our dive team has sampled along each sanctuary and the general layout of each site. Hold the right mouse button to rotate the map. Hover your cursor over the columns to see how many oysters were found at each point. Select a year from the drop down menu in the sidebar to see how densities change over time.** 
+    
+    *NOTE: Red columns indicate two or more samples were collected in close proximity to one another.
+""")
 
 # Load data
 df = pd.read_csv('data/2019-2023_oyster_densities.csv')
+OSMaterial = gpd.read_file("data/OS_material_storymap.shp")
+OSBoundaries = gpd.read_file("data/permit_boundaries.shp")
 
+st.sidebar.subheader("Use the dropdown to select a year and explore oyster densities across the Oyster Sanctuary Network")
 default_year = 2023
 default_year_index = list(df["Year"].unique()).index(default_year)
 
@@ -12,35 +43,66 @@ year = st.sidebar.selectbox(
     "Select a Year:", 
     df["Year"].unique(),
     index=default_year_index,
-    key="year_selector"  # Use a string for the key to avoid conflicts
+    key=30
 )
 
 df_selection = df[df["Year"] == year]
 
+# Extract centroids for each geometry in OSBoundaries
+OSBoundaries['centroid'] = OSBoundaries.geometry.centroid
+OSBoundaries['Latitude'] = OSBoundaries.centroid.y
+OSBoundaries['Longitude'] = OSBoundaries.centroid.x
+
+# Convert centroids to a DataFrame
+boundary_centroid_data = OSBoundaries[['OS_Name', 'Latitude', 'Longitude']]
+
+# Convert GeoDataFrame to GeoJSON dictionary
+geojson_dict = OSMaterial.to_crs(epsg=4326).__geo_interface__
+
+# Define layers
+text_layer = pdk.Layer(
+    "TextLayer",
+    data=boundary_centroid_data,
+    get_position=["Longitude", "Latitude"],
+    get_text="OS_Name",
+    get_color=[0, 0, 0, 255],
+    get_size=20,
+    get_alignment_baseline="'top'",
+)
+
+material_layer = pdk.Layer(
+    "GeoJsonLayer",
+    data=geojson_dict,  
+    get_fill_color=[255, 0, 0, 150],
+    pickable=True,
+)
+
 max_total = df_selection['total'].max()
 df_selection['tooltip'] = df_selection['total'].apply(lambda x: f'{x} oysters/m²')
 
-density_layer = pdk.Layer(
-    "HexagonLayer",
-    data=df_selection,
-    get_position=["Longitude", "Latitude"],
-    radius=8,
-    elevation_scale=1,
-    elevation_range=[0, 3000],
-    extruded=True,
-    pickable=True,
-    get_elevation="total",
-    auto_highlight=True,
-    get_fill_color="[255, total * 5, total * 5]",  # Adjust color mapping
-)
 
 tooltip = {
-    "html": "<b>Oysters/m²:</b> {total}",  # Ensure {total} matches your data column name
+    "html": "<b>Oysters/m²:</b> {total}",
     "style": {
         "backgroundColor": "steelblue",
         "color": "white"
     }
 }
+
+density_layer = pdk.Layer(
+    "HexagonLayer",
+    data=df_selection,
+    get_position=["Longitude", "Latitude"],
+    radius=8,  
+    elevation_scale=1,  
+    elevation_range=[0, 3000],
+    extruded=True,
+    pickable=True,
+    get_elevation="total",
+    auto_highlight=True,
+    get_fill_color="[255, total * 5, total * 5]"
+)
+
 
 # Display map
 st.pydeck_chart(
@@ -52,7 +114,7 @@ st.pydeck_chart(
             "zoom": 11.2,
             "pitch": 60,
         },
-        layers=[density_layer],
+        layers=[text_layer, density_layer, material_layer],  # Start with only these two layers
         tooltip=tooltip
     )
 )
