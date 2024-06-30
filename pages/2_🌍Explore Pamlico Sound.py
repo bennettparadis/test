@@ -2,11 +2,13 @@ import streamlit as st
 import pandas as pd
 import pydeck as pdk
 import geopandas as gpd
-import plotly.express as px
-import json
-import plotly.graph_objects as go
 
-# Tab display 
+# Load data
+df = pd.read_csv('/mnt/data/2019-2023_oyster_densities.csv')
+OSMaterial = gpd.read_file("/mnt/data/OS_material_storymap.shp")
+OSBoundaries = gpd.read_file("/mnt/data/permit_boundaries.shp")
+
+# Set up the Streamlit page
 st.set_page_config(page_title="NC Oyster Sanctuary Data", page_icon=":oyster:", layout="wide")
 
 st.markdown(
@@ -21,7 +23,7 @@ st.markdown(
 st.markdown(
     f"""
     <div style="text-align: center;">
-        <p style="font-size:20px;">Welcome to North Carolina's Pamlico Sound -- home to 15 oyster sanctuaries spanning 566 acres of protected subtidal habitat. Every year NCDMF's Habitat & Enhancement dive team visits each sanctuary to collect oyster density estimates all around the reefs which are then used for further analysis and to quantify reef performance. </p>
+        <p style="font-size:20px;">Welcome to North Carolina's Pamlico Sound -- home to 15 oyster sanctuaries spanning 563 acres of protected subtidal habitat. Every year NCDMF's Habitat & Enhancement dive team visits each sanctuary to collect oyster density estimates all around the reefs which are then used for further analysis and to quantify reef performance.</p>
     </div>
     """, 
     unsafe_allow_html=True
@@ -32,12 +34,6 @@ st.info("""
     
     *NOTE: Red columns indicate two or more samples were collected in close proximity to one another.
 """)
-
-
-# Load local CSV data
-df = pd.read_csv("data/2019-2023_oyster_densities.csv")
-OSMaterial = gpd.read_file("data/OS_material_storymap.shp")
-OSBoundaries = gpd.read_file("data/permit_boundaries.shp")
 
 st.sidebar.subheader("Use the dropdown to select a year and explore oyster densities across the Oyster Sanctuary Network")
 default_year = 2023
@@ -50,8 +46,10 @@ year = st.sidebar.selectbox(
     key=30
 )
 
-df_selection = df[df['Year'] == year]
-df_selection = df_selection[['Year', 'Latitude', 'Longitude', 'total']]
+df_selection = df.query("Year == @year")
+
+# Remove rows with missing values in 'Latitude', 'Longitude', 'total'
+df_selection = df_selection.dropna(subset=['Latitude', 'Longitude', 'total'])
 
 # Extract centroids for each geometry in OSBoundaries
 OSBoundaries['centroid'] = OSBoundaries.geometry.centroid
@@ -65,7 +63,7 @@ boundary_centroid_data = OSBoundaries[['OS_Name', 'Latitude', 'Longitude']]
 geojson_dict = OSMaterial.to_crs(epsg=4326).__geo_interface__
 
 # Define layers
-# Define the TextLayer with positions of each geometry's centroid
+# TextLayer with positions of each geometry's centroid
 text_layer = pdk.Layer(
     "TextLayer",
     data=boundary_centroid_data,
@@ -85,27 +83,23 @@ material_layer = pdk.Layer(
 )
 
 max_total = df_selection['total'].max()
-df_selection['tooltip'] = df_selection['total'].apply(lambda x: f'{x} oysters/m²')
 
-# Density visualizer
+# Define the ColumnLayer for the density visualization
 density_layer = pdk.Layer(
-    "HexagonLayer",
+    "ColumnLayer",
     data=df_selection,
     get_position=["Longitude", "Latitude"],
-    radius=8,  # Increased radius for better visualization
-    elevation_scale=1,  # Adjusted elevation scale for better visibility
-    elevation_range=[0, 3000],
-    extruded=True,
+    get_elevation="total",
+    radius=500,
+    elevation_scale=100,
+    get_fill_color=[255, 0, 0, 150],
     pickable=True,
-    get_elevation_weight='total',
-    elevation_domain=[0, max_total],
     auto_highlight=True,
-    get_fill_color="[255, total * 5, total * 5]",
 )
 
-# Tooltip configuration for the HexagonLayer
+# Tooltip configuration for the ColumnLayer
 tooltip = {
-    "html": "<b>Oysters/m²:</b> {'total'}",
+    "html": "<b>Oysters/m²:</b> {total}",
     "style": {
         "backgroundColor": "steelblue",
         "color": "white"
@@ -122,10 +116,7 @@ st.pydeck_chart(
             "zoom": 11.2,
             "pitch": 60,
         },
-        layers=[text_layer, material_layer],
-        tooltip = tooltip,
+        layers=[text_layer, density_layer, material_layer],
+        tooltip=tooltip  # Add the tooltip configuration
     )
 )
-
-st.write(df_selection.head())
-st.write(df_selection.dtypes)
