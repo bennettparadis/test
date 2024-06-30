@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import pydeck as pdk
-import geopandas as gpd
 
 # Load data
 df = pd.read_csv('data/2019-2023_oyster_densities.csv')
@@ -13,7 +12,7 @@ year = st.sidebar.selectbox(
     "Select a Year:", 
     df["Year"].unique(),
     index=default_year_index,
-    key=30
+    key="year_selector"  # Use a string for the key to avoid conflicts
 )
 
 df_selection = df[df["Year"] == year]
@@ -25,18 +24,18 @@ density_layer = pdk.Layer(
     "HexagonLayer",
     data=df_selection,
     get_position=["Longitude", "Latitude"],
-    radius=8,  
-    elevation_scale=1,  
+    radius=200,  # Adjust radius as needed
+    elevation_scale=50,  # Adjust elevation scale
     elevation_range=[0, 3000],
     extruded=True,
     pickable=True,
     get_elevation="total",
     auto_highlight=True,
-    get_fill_color="[255, total * 5, total * 5]",
+    get_fill_color="[255, total * 5, total * 5]",  # Adjust color mapping
 )
 
 tooltip = {
-    "html": "<b>Oysters/m²:</b> {total}",
+    "html": "<b>Oysters/m²:</b> {tooltip}",
     "style": {
         "backgroundColor": "steelblue",
         "color": "white"
@@ -53,7 +52,7 @@ st.pydeck_chart(
             "zoom": 11.2,
             "pitch": 60,
         },
-        layers=[density_layer],  # Start with only these two layers
+        layers=[density_layer],
         tooltip=tooltip
     )
 )
