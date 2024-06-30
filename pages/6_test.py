@@ -32,15 +32,14 @@ density_layer = pdk.Layer(
     "HexagonLayer",
     data=df_selection,
     get_position=["Longitude", "Latitude"],
-    radius=200,  # Adjust radius as needed
-    elevation_scale=50,  # Adjust elevation scale
+    radius=8,  
+    elevation_scale=1,  
     elevation_range=[0, 3000],
     extruded=True,
     pickable=True,
     get_elevation="total",
     auto_highlight=True,
-    get_fill_color="[255, total * 5, total * 5]",  # Adjust color mapping
-    tooltip=tooltip,  # Pass the tooltip configuration directly to the layer
+    get_fill_color="[255, total * 5, total * 5]",
 )
 
 # Display map
