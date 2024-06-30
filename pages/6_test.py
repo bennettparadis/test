@@ -24,8 +24,8 @@ density_layer = pdk.Layer(
     "HexagonLayer",
     data=df_selection,
     get_position=["Longitude", "Latitude"],
-    radius=200,  # Adjust radius as needed
-    elevation_scale=50,  # Adjust elevation scale
+    radius=
+    elevation_scale=1,
     elevation_range=[0, 3000],
     extruded=True,
     pickable=True,
