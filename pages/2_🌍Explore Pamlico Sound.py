@@ -35,9 +35,9 @@ st.info("""
 
 
 # Load local CSV data
-df = pd.read_csv("C:/Users/bparadis/Documents/Python Scripts/dashboard/2019-2023_oyster_densities.csv")
-OSMaterial = gpd.read_file("C:/Users/bparadis/Documents/Python Scripts/dashboard/OS_material_storymap.shp")
-OSBoundaries = gpd.read_file("C:/Users/bparadis/Documents/Python Scripts/dashboard/permit_boundaries.shp")
+df = pd.read_csv("data/2019-2023_oyster_densities.csv")
+OSMaterial = gpd.read_file("data/OS_material_storymap.shp")
+OSBoundaries = gpd.read_file("data/permit_boundaries.shp")
 
 st.sidebar.subheader("Use the dropdown to select a year and explore oyster densities across the Oyster Sanctuary Network")
 default_year = 2023
