@@ -19,8 +19,14 @@ df_selection = df[df["Year"] == year]
 
 max_total = df_selection['total'].max()
 
-# Create a formatted tooltip column
-df_selection['tooltip'] = df_selection['total'].apply(lambda x: f"Oysters/m²: {x}")
+# Define the tooltip format
+tooltip = {
+    "html": "Oysters/m²: {total}",  # Format the tooltip HTML to display the 'total' value
+    "style": {
+        "backgroundColor": "steelblue",
+        "color": "white"
+    }
+}
 
 density_layer = pdk.Layer(
     "HexagonLayer",
@@ -34,16 +40,8 @@ density_layer = pdk.Layer(
     get_elevation="total",
     auto_highlight=True,
     get_fill_color="[255, total * 5, total * 5]",  # Adjust color mapping
+    tooltip=tooltip,  # Pass the tooltip configuration directly to the layer
 )
-
-# Define the tooltip
-tooltip = {
-    "html": "<b>{tooltip}</b>",
-    "style": {
-        "backgroundColor": "steelblue",
-        "color": "white"
-    }
-}
 
 # Display map
 st.pydeck_chart(
@@ -56,6 +54,5 @@ st.pydeck_chart(
             "pitch": 60,
         },
         layers=[density_layer],
-        tooltip=tooltip
     )
 )
