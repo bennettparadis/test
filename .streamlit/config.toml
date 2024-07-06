@@ -5,6 +5,3 @@ secondaryBackgroundColor = "#f5a53d"
 textColor = "#00647B"
 font = "sans serif"
 
-# sidebar format
-sidebar.backgroundColor = "#f5a53d"  
-sidebar.textColor = "#00647B"   
